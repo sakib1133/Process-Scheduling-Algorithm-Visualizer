@@ -1,0 +1,226 @@
+/* Custom styles for CPU Scheduling Simulator */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary-color: #3b82f6;
+    --secondary-color: #10b981;
+    --accent-color: #8b5cf6;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --dark-bg: #111827;
+    --dark-surface: #1f2937;
+    --dark-border: #374151;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--dark-bg);
+    color: #f3f4f6;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-surface);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4b5563;
+}
+
+/* Algorithm button active state */
+.algorithm-btn.active {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color);
+}
+
+/* Gantt chart styles */
+.gantt-container {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    overflow-x: auto;
+    padding: 1rem;
+}
+
+.gantt-block {
+    min-width: 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.gantt-block:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.gantt-block.idle {
+    background-color: #4b5563;
+}
+
+.gantt-time-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* Table styles */
+table {
+    border-collapse: collapse;
+}
+
+tbody tr:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Input focus styles */
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Button transitions */
+button {
+    transition: all 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Card hover effects */
+.bg-gray-800 {
+    transition: box-shadow 0.3s ease;
+}
+
+.bg-gray-800:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile menu animation */
+#mobileMenuOverlay {
+    transition: opacity 0.3s ease;
+}
+
+aside {
+    transition: transform 0.3s ease;
+}
+
+/* Loading spinner */
+.spinner {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid white;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast.success {
+    background-color: var(--secondary-color);
+}
+
+.toast.error {
+    background-color: var(--danger-color);
+}
+
+.toast.warning {
+    background-color: var(--warning-color);
+}
+
+/* Process color palette */
+.process-colors {
+    --p1: #3b82f6;
+    --p2: #10b981;
+    --p3: #8b5cf6;
+    --p4: #f59e0b;
+    --p5: #ef4444;
+    --p6: #06b6d4;
+    --p7: #ec4899;
+    --p8: #84cc16;
+    --p9: #f97316;
+    --p10: #6366f1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .gantt-block {
+        min-width: 30px;
+        height: 50px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Animation for results */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
