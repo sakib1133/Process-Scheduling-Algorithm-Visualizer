@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: process-scheduling-visualizer
+    env: static
+    buildCommand: npm install
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
