@@ -45,12 +45,17 @@ class SJF {
                 continue;
             }
 
-            // Select process with shortest burst time (arrival time as tiebreaker)
+            // Select process with shortest burst time
+            // Tiebreaker 1: arrival time (earlier = higher priority)
+            // Tiebreaker 2: process ID (smaller = higher priority)
             arrivedProcesses.sort((a, b) => {
                 if (a.burstTime !== b.burstTime) {
                     return a.burstTime - b.burstTime;
                 }
-                return a.arrivalTime - b.arrivalTime;
+                if (a.arrivalTime !== b.arrivalTime) {
+                    return a.arrivalTime - b.arrivalTime;
+                }
+                return String(a.id).localeCompare(String(b.id));
             });
 
             const selectedProcess = arrivedProcesses[0];

@@ -47,12 +47,17 @@ class SRTF {
                 continue;
             }
 
-            // Select process with shortest remaining time (arrival time as tiebreaker)
+            // Select process with shortest remaining time
+            // Tiebreaker 1: arrival time (earlier = higher priority)
+            // Tiebreaker 2: process ID (smaller = higher priority)
             arrivedProcesses.sort((a, b) => {
                 if (a.remainingTime !== b.remainingTime) {
                     return a.remainingTime - b.remainingTime;
                 }
-                return a.arrivalTime - b.arrivalTime;
+                if (a.arrivalTime !== b.arrivalTime) {
+                    return a.arrivalTime - b.arrivalTime;
+                }
+                return String(a.id).localeCompare(String(b.id));
             });
 
             const selectedProcess = arrivedProcesses[0];
