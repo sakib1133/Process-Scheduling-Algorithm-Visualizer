@@ -204,8 +204,8 @@ class App {
             return;
         }
 
-        if (priority < 1 || priority > 5) {
-            this.showToast('Priority must be between 1 and 5', 'error');
+        if (priority < 0) {
+            this.showToast('Priority must be greater than 0', 'error');
             return;
         }
 
