@@ -3,7 +3,7 @@
 Compact, browser-first simulator that visualizes CPU scheduling behavior with interactive Gantt charts, per-process and aggregate metrics, and side-by-side algorithm comparison — ideal for portfolio demos and interview walkthroughs.
 
 ## Project overview
-Lightweight, modular web app that simulates process scheduling policies, calculates performance metrics (waiting time, turnaround time, CPU utilization, throughput, context switches), and visualizes execution timelines to compare algorithm trade-offs. Designed to showcase algorithmic reasoning, modular JavaScript architecture, and data visualization skills.
+Built using JavaScript, Tailwind CSS, Chart.js, and browser storage APIs to simulate and analyze CPU scheduling algorithms with real-time visualizations and performance analytics. Lightweight, modular web app that simulates process scheduling policies, calculates performance metrics (waiting time, turnaround time, CPU utilization, throughput, context switches), and visualizes execution timelines to compare algorithm trade-offs. Designed to showcase algorithmic reasoning, modular JavaScript architecture, and data visualization skills.
 
 ## Feature highlights
 - Interactive process editor: add / edit / remove processes (ID, arrival, burst, priority)  
