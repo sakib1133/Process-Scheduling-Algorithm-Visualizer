@@ -43,6 +43,8 @@ class App {
         this.chartRenderer.initCharts();
         this.initializeNavigation();
         this.initializeAnalyticsCharts();
+        // COMPLEXITY ANALYSIS: initialize complexity card with current selection (or None)
+        if (typeof this.updateComplexityDisplay === 'function') this.updateComplexityDisplay(this.selectedAlgorithm);
     }
 
     bindEvents() {
