@@ -11,7 +11,8 @@ class Scheduler {
             srtf: new SRTF(),
             rr: new RoundRobin(),
             priority: new Priority(),
-            preemptivePriority: new PreemptivePriority()
+            preemptivePriority: new PreemptivePriority(),
+            mlfq: new MLFQ()  // ← ADDED
         };
     }
 
@@ -129,7 +130,12 @@ class Scheduler {
                 name: 'Preemptive Priority',
                 type: 'preemptive',
                 description: 'Higher priority process can preempt lower priority process'
-            }
+            },
+            mlfq: {                                   
+                name: 'Multilevel Feedback Queue',    
+                type: 'preemptive',                   
+                description: 'Processes move between queues based on CPU usage. Q0 (quantum=4) → Q1 (quantum=8) → Q2 (FCFS). How real OS schedulers work.'
+            }                                         
         };
 
         return info[algorithm] || null;

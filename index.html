@@ -249,6 +249,10 @@
                             <button class="algorithm-btn bg-gray-700 hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-colors text-left" data-algorithm="preemptivePriority">
                                 Priority (Preemptive)
                             </button>
+                            <!-- MLFQ ADDED HERE -->
+                            <button class="algorithm-btn bg-gray-700 hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-colors text-left col-span-2" data-algorithm="mlfq">
+                                MLFQ (Multilevel Feedback Queue)
+                            </button>
                         </div>
                         <div class="mt-4" id="timeQuantumContainer" style="display: none;">
                             <label class="block text-sm text-gray-400 mb-2">Time Quantum (for Round Robin)</label>
@@ -667,6 +671,7 @@
     <script src="js/algorithms/rr.js"></script>
     <script src="js/algorithms/priority.js"></script>
     <script src="js/algorithms/preemptivePriority.js"></script>
+    <script src="js/algorithms/mlfq.js"></script>
     <script src="js/metrics.js"></script>
     <script src="js/ganttChart.js"></script>
     <script src="js/scheduler.js"></script>
