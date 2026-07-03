@@ -280,6 +280,84 @@ class App {
             mlfq: 'MLFQ (Multilevel Feedback Queue)'
         };
         document.getElementById('selectedAlgorithm').textContent = algorithmNames[algorithm] || algorithm;
+        // COMPLEXITY ANALYSIS: update complexity card when algorithm changes
+        if (typeof this.updateComplexityDisplay === 'function') {
+            this.updateComplexityDisplay(algorithm);
+        }
+    }
+
+    /**
+     * COMPLEXITY ANALYSIS: Display time/space complexity and a short explanation
+     * This method updates the card in the dashboard whenever the selected algorithm changes.
+     * Do NOT modify scheduling logic here — only UI display.
+     */
+    updateComplexityDisplay(algorithm) {
+        const map = {
+            fcfs: {
+                name: 'FCFS',
+                time: 'O(n log n)',
+                space: 'O(n)',
+                explanation: 'Processes are sorted by arrival (logarithmic sort); execution is single-pass, so overall dominated by the sort.'
+            },
+            sjf: {
+                name: 'SJF',
+                time: 'O(n²)',
+                space: 'O(n)',
+                explanation: 'Implementation repeatedly scans available processes to pick the shortest job, resulting in quadratic behavior.'
+            },
+            srtf: {
+                name: 'SRTF',
+                time: 'O(T·n)',
+                space: 'O(n)',
+                explanation: 'Preemptive checks at each time unit (T) over n processes to find shortest remaining time; cost grows with total time simulated.'
+            },
+            rr: {
+                name: 'Round Robin',
+                time: 'O(T/q)',
+                space: 'O(n)',
+                explanation: 'Runs in time proportional to total simulated time divided by quantum (T/q) with O(n) storage for queues.'
+            },
+            priority: {
+                name: 'Priority (Non-Preemptive)',
+                time: 'O(n²)',
+                space: 'O(n)',
+                explanation: 'Selecting highest-priority process from the ready set may require scanning available processes repeatedly, yielding quadratic time.'
+            },
+            preemptivePriority: {
+                name: 'Priority (Preemptive)',
+                time: 'O(T·n)',
+                space: 'O(n)',
+                explanation: 'Preemption requires checking at runtime (per time unit T) for higher-priority arrivals across n processes.'
+            },
+            mlfq: {
+                name: 'MLFQ',
+                time: 'Varies (implementation dependent)',
+                space: 'O(n)',
+                explanation: 'Multilevel queues with demotion/promotion; complexity depends on implementation (quantums, queue management), typically O(n) space and linearithmic-to-linear runtime per pass.'
+            }
+        };
+
+        const info = map[algorithm];
+
+        const algoEl = document.getElementById('complexityAlgorithm');
+        const timeEl = document.getElementById('complexityTime');
+        const spaceEl = document.getElementById('complexitySpace');
+        const explEl = document.getElementById('complexityExplanation');
+
+        if (!algoEl || !timeEl || !spaceEl || !explEl) return;
+
+        if (!info) {
+            algoEl.textContent = 'None';
+            timeEl.textContent = '-';
+            spaceEl.textContent = '-';
+            explEl.textContent = 'Select an algorithm to view complexity and explanation.';
+            return;
+        }
+
+        algoEl.textContent = info.name;
+        timeEl.textContent = info.time;
+        spaceEl.textContent = info.space;
+        explEl.textContent = info.explanation;
     }
 
     runSimulation() {
