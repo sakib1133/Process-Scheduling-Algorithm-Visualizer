@@ -1,3 +1,4 @@
+
 /**
  * Main Application Controller
  * Handles UI interactions and coordinates between components
@@ -26,11 +27,6 @@ class App {
         this.init();
     }
 
-    /**
-     * Safely get DOM element by ID, returns null if not found
-     * @param {string} id - Element ID
-     * @returns {HTMLElement|null} Element or null
-     */
     safeGetElement(id) {
         const element = document.getElementById(id);
         if (!element) {
@@ -50,7 +46,6 @@ class App {
     }
 
     bindEvents() {
-        // Process form submission
         const processForm = this.safeGetElement('processForm');
         if (processForm) {
             processForm.addEventListener('submit', (e) => {
@@ -59,7 +54,6 @@ class App {
             });
         }
 
-        // Clear all processes
         const clearProcesses = this.safeGetElement('clearProcesses');
         if (clearProcesses) {
             clearProcesses.addEventListener('click', () => {
@@ -67,14 +61,12 @@ class App {
             });
         }
 
-        // Algorithm selection
         document.querySelectorAll('.algorithm-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 this.selectAlgorithm(btn.dataset.algorithm);
             });
         });
 
-        // Run simulation
         const runSimulation = this.safeGetElement('runSimulation');
         if (runSimulation) {
             runSimulation.addEventListener('click', () => {
@@ -82,7 +74,6 @@ class App {
             });
         }
 
-        // Reset simulation
         const resetSimulation = this.safeGetElement('resetSimulation');
         if (resetSimulation) {
             resetSimulation.addEventListener('click', () => {
@@ -90,7 +81,6 @@ class App {
             });
         }
 
-        // Mobile menu toggle
         const mobileMenuBtn = this.safeGetElement('mobileMenuBtn');
         if (mobileMenuBtn) {
             mobileMenuBtn.addEventListener('click', () => {
@@ -105,7 +95,6 @@ class App {
             });
         }
 
-        // Run comparison
         const runComparison = this.safeGetElement('runComparison');
         if (runComparison) {
             runComparison.addEventListener('click', () => {
@@ -113,7 +102,6 @@ class App {
             });
         }
 
-        // Settings event listeners
         const settingDarkMode = this.safeGetElement('setting-darkMode');
         if (settingDarkMode) {
             settingDarkMode.addEventListener('change', (e) => {
@@ -209,25 +197,21 @@ class App {
         const burstTime = parseInt(burstTimeEl.value);
         const priority = parseInt(priorityEl.value) || 1;
 
-        // Validate process ID uniqueness
         if (this.processes.some(p => p.id === processId)) {
             this.showToast('Process ID already exists', 'error');
             return;
         }
 
-        // Validate priority is between 1 and 5
         if (priority < 1 || priority > 5) {
             this.showToast('Priority must be between 1 and 5', 'error');
             return;
         }
 
-        // Validate arrival time is non-negative
         if (arrivalTime < 0) {
             this.showToast('Arrival time must be non-negative', 'error');
             return;
         }
 
-        // Validate burst time is positive
         if (burstTime <= 0) {
             this.showToast('Burst time must be positive', 'error');
             return;
@@ -270,8 +254,7 @@ class App {
 
     selectAlgorithm(algorithm) {
         this.selectedAlgorithm = algorithm;
-        
-        // Update UI
+
         document.querySelectorAll('.algorithm-btn').forEach(btn => {
             btn.classList.remove('active');
             if (btn.dataset.algorithm === algorithm) {
@@ -279,7 +262,6 @@ class App {
             }
         });
 
-        // Show/hide time quantum input for Round Robin
         const timeQuantumContainer = document.getElementById('timeQuantumContainer');
         if (algorithm === 'rr') {
             timeQuantumContainer.style.display = 'block';
@@ -287,14 +269,15 @@ class App {
             timeQuantumContainer.style.display = 'none';
         }
 
-        // Update selected algorithm display
+        // ✅ CHANGE 1: Added mlfq to algorithm display names
         const algorithmNames = {
             fcfs: 'FCFS (First Come First Serve)',
             sjf: 'SJF (Shortest Job First)',
             srtf: 'SRTF (Shortest Remaining Time First)',
             rr: 'Round Robin',
             priority: 'Priority (Non-Preemptive)',
-            preemptivePriority: 'Priority (Preemptive)'
+            preemptivePriority: 'Priority (Preemptive)',
+            mlfq: 'MLFQ (Multilevel Feedback Queue)'
         };
         document.getElementById('selectedAlgorithm').textContent = algorithmNames[algorithm] || algorithm;
     }
@@ -311,8 +294,8 @@ class App {
         }
 
         const timeQuantumEl = this.safeGetElement('timeQuantum');
-        const timeQuantum = this.selectedAlgorithm === 'rr' && timeQuantumEl 
-            ? parseInt(timeQuantumEl.value) 
+        const timeQuantum = this.selectedAlgorithm === 'rr' && timeQuantumEl
+            ? parseInt(timeQuantumEl.value)
             : null;
 
         if (this.selectedAlgorithm === 'rr' && (!timeQuantum || timeQuantum < 1)) {
@@ -320,26 +303,20 @@ class App {
             return;
         }
 
-        // Validate processes before running
         if (!this.scheduler.validateProcesses(this.processes)) {
             this.showToast('Invalid process data. Please check arrival times, burst times, and priorities.', 'error');
             return;
         }
 
         try {
-            // Run the simulation
             const result = this.scheduler.schedule(
                 JSON.parse(JSON.stringify(this.processes)),
                 this.selectedAlgorithm,
                 timeQuantum
             );
 
-            // Update UI with results
             this.displayResults(result);
-            
-            // Auto-run comparison to update charts and store analytics data
             this.runComparisonAndStoreData();
-            
             this.showToast('Simulation completed', 'success');
         } catch (error) {
             console.error('Simulation error:', error);
@@ -359,19 +336,14 @@ class App {
     }
 
     displayResults(result) {
-        // Update Gantt chart
         this.ganttChart.render(result.schedule);
-
-        // Update results table
         this.updateResultsTable(result.processes);
-
-        // Update statistics
         this.updateResultStatistics(result);
     }
 
     updateProcessTable() {
         const tbody = document.getElementById('processTableBody');
-        
+
         if (this.processes.length === 0) {
             const row = document.createElement('tr');
             const cell = document.createElement('td');
@@ -424,7 +396,7 @@ class App {
 
     updateResultsTable(processes) {
         const tbody = document.getElementById('resultsTableBody');
-        
+
         tbody.innerHTML = '';
         processes.forEach(process => {
             const row = document.createElement('tr');
@@ -473,7 +445,7 @@ class App {
 
     updateResultStatistics(result) {
         const metrics = this.metrics.calculate(result.processes);
-        
+
         const avgWaitingTimeEl = this.safeGetElement('avgWaitingTime');
         if (avgWaitingTimeEl) avgWaitingTimeEl.textContent = metrics.avgWaitingTime.toFixed(2);
 
@@ -503,8 +475,7 @@ class App {
         if (arrivalTimeEl) arrivalTimeEl.value = '';
         if (burstTimeEl) burstTimeEl.value = '';
         if (priorityEl) priorityEl.value = '';
-        
-        // Auto-increment process ID
+
         const nextId = this.processes.length + 1;
         if (processIdEl) processIdEl.value = `P${nextId}`;
     }
@@ -517,18 +488,22 @@ class App {
     }
 
     showToast(message, type = 'success') {
+        if (!this.settings.showToasts) return;
+
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.textContent = message;
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
             toast.remove();
         }, 3000);
     }
 
     saveToLocalStorage() {
-        localStorage.setItem('cpuSchedulerProcesses', JSON.stringify(this.processes));
+        if (this.settings.autoSave) {
+            localStorage.setItem('cpuSchedulerProcesses', JSON.stringify(this.processes));
+        }
     }
 
     loadFromLocalStorage() {
@@ -536,11 +511,10 @@ class App {
         if (saved) {
             try {
                 const data = JSON.parse(saved);
-                // Validate data is an array and has correct structure
-                if (Array.isArray(data) && data.every(p => 
-                    p.id && 
-                    typeof p.arrivalTime === 'number' && 
-                    typeof p.burstTime === 'number' && 
+                if (Array.isArray(data) && data.every(p =>
+                    p.id &&
+                    typeof p.arrivalTime === 'number' &&
+                    typeof p.burstTime === 'number' &&
                     typeof p.priority === 'number'
                 )) {
                     this.processes = data;
@@ -549,12 +523,10 @@ class App {
                 } else {
                     console.warn('Invalid process data in localStorage, using empty array');
                     this.processes = [];
-                    this.showToast('Invalid saved data, starting fresh', 'error');
                 }
             } catch (error) {
                 console.error('Error loading from localStorage:', error);
                 this.processes = [];
-                this.showToast('Error loading saved data, starting fresh', 'error');
             }
         }
     }
@@ -565,7 +537,6 @@ class App {
             return;
         }
 
-        // Validate processes before running comparison
         if (!this.scheduler.validateProcesses(this.processes)) {
             this.showToast('Invalid process data. Please check arrival times, burst times, and priorities.', 'error');
             return;
@@ -573,11 +544,12 @@ class App {
 
         const timeQuantumEl = this.safeGetElement('timeQuantum');
         const timeQuantum = timeQuantumEl ? parseInt(timeQuantumEl.value) || 2 : 2;
-        const algorithms = ['fcfs', 'sjf', 'srtf', 'rr', 'priority', 'preemptivePriority'];
+
+        // ✅ CHANGE 2: Added mlfq to comparison algorithms list
+        const algorithms = ['fcfs', 'sjf', 'srtf', 'rr', 'priority', 'preemptivePriority', 'mlfq'];
         const results = {};
         const contextSwitches = {};
 
-        // Run all algorithms
         algorithms.forEach(algorithm => {
             try {
                 const result = this.scheduler.schedule(
@@ -592,20 +564,15 @@ class App {
             }
         });
 
-        // Calculate metrics for all algorithms
         const comparisonData = {};
         Object.keys(results).forEach(algorithm => {
             comparisonData[algorithm] = this.metrics.calculate(results[algorithm]);
             comparisonData[algorithm].contextSwitches = contextSwitches[algorithm];
         });
 
-        // Display comparison table
         this.displayComparisonTable(comparisonData);
-
-        // Update charts
         this.chartRenderer.updateCharts(comparisonData);
 
-        // Show comparison and charts sections
         const comparisonSection = this.safeGetElement('comparisonSection');
         if (comparisonSection) comparisonSection.style.display = 'block';
         const chartsSection = this.safeGetElement('chartsSection');
@@ -615,11 +582,8 @@ class App {
     }
 
     runComparisonAndStoreData() {
-        if (this.processes.length === 0) {
-            return;
-        }
+        if (this.processes.length === 0) return;
 
-        // Validate processes before running comparison
         if (!this.scheduler.validateProcesses(this.processes)) {
             console.warn('Invalid process data, skipping comparison');
             return;
@@ -627,11 +591,12 @@ class App {
 
         const timeQuantumEl = this.safeGetElement('timeQuantum');
         const timeQuantum = timeQuantumEl ? parseInt(timeQuantumEl.value) || 2 : 2;
-        const algorithms = ['fcfs', 'sjf', 'srtf', 'rr', 'priority', 'preemptivePriority'];
+
+        // ✅ CHANGE 3: Added mlfq to auto-comparison algorithms list
+        const algorithms = ['fcfs', 'sjf', 'srtf', 'rr', 'priority', 'preemptivePriority', 'mlfq'];
         const results = {};
         const contextSwitches = {};
 
-        // Run all algorithms
         algorithms.forEach(algorithm => {
             try {
                 const result = this.scheduler.schedule(
@@ -646,23 +611,16 @@ class App {
             }
         });
 
-        // Calculate metrics for all algorithms and store for analytics
         const comparisonData = {};
         Object.keys(results).forEach(algorithm => {
             comparisonData[algorithm] = this.metrics.calculate(results[algorithm]);
             comparisonData[algorithm].contextSwitches = contextSwitches[algorithm];
         });
 
-        // Store analytics data
         this.analyticsData = comparisonData;
-
-        // Display comparison table
         this.displayComparisonTable(comparisonData);
-
-        // Update charts
         this.chartRenderer.updateCharts(comparisonData);
 
-        // Show comparison and charts sections
         const comparisonSection = this.safeGetElement('comparisonSection');
         if (comparisonSection) comparisonSection.style.display = 'block';
         const chartsSection = this.safeGetElement('chartsSection');
@@ -671,16 +629,18 @@ class App {
 
     displayComparisonTable(comparisonData) {
         const tbody = document.getElementById('comparisonTableBody');
+
+        // ✅ CHANGE 4: Added mlfq to comparison table display names
         const algorithmNames = {
             fcfs: 'FCFS',
             sjf: 'SJF',
             srtf: 'SRTF',
             rr: 'Round Robin',
             priority: 'Priority',
-            preemptivePriority: 'Preemptive Priority'
+            preemptivePriority: 'Preemptive Priority',
+            mlfq: 'MLFQ'
         };
 
-        // Find best algorithm for each metric
         const bestWaitingTime = this.metrics.findBestAlgorithm(comparisonData, 'avgWaitingTime');
         const bestTurnaroundTime = this.metrics.findBestAlgorithm(comparisonData, 'avgTurnaroundTime');
         const bestCPUUtilization = this.metrics.findBestAlgorithm(comparisonData, 'cpuUtilization');
@@ -733,7 +693,6 @@ class App {
         });
     }
 
-    // Navigation Methods
     initializeNavigation() {
         document.getElementById('nav-dashboard').addEventListener('click', () => this.showPage('dashboard'));
         document.getElementById('nav-analytics').addEventListener('click', () => this.showPage('analytics'));
@@ -741,12 +700,10 @@ class App {
     }
 
     showPage(pageId) {
-        // Hide all pages
         document.querySelectorAll('.page-section').forEach(section => {
             section.classList.add('hidden');
         });
 
-        // Show selected page
         const page = document.getElementById(`${pageId}-page`);
         if (page) {
             page.classList.remove('hidden');
@@ -756,7 +713,6 @@ class App {
             }
         }
 
-        // Update navigation state
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.classList.remove('active');
         });
@@ -765,7 +721,6 @@ class App {
             navBtn.classList.add('active');
         }
 
-        // Update header title
         const titles = {
             dashboard: 'Dashboard',
             analytics: 'Analytics',
@@ -775,28 +730,21 @@ class App {
 
         this.currentPage = pageId;
 
-        // Update analytics page if navigating there
         if (pageId === 'analytics') {
             this.updateAnalyticsPage();
         }
     }
 
-    // Settings Methods
     loadSettings() {
         const saved = localStorage.getItem('cpuSchedulerSettings');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
-                // Validate settings structure
                 if (data && typeof data === 'object') {
                     this.settings = { ...this.settings, ...data };
-                } else {
-                    console.warn('Invalid settings in localStorage, using defaults');
-                    this.showToast('Invalid settings, using defaults', 'error');
                 }
             } catch (e) {
                 console.error('Error loading settings:', e);
-                this.showToast('Error loading settings, using defaults', 'error');
             }
         }
         this.syncSettingsUI();
@@ -807,7 +755,6 @@ class App {
     }
 
     applySettings() {
-        // Apply dark mode
         if (this.settings.darkMode) {
             document.body.classList.remove('bg-gray-100', 'text-gray-900');
             document.body.classList.add('bg-gray-900', 'text-gray-100');
@@ -816,7 +763,6 @@ class App {
             document.body.classList.add('bg-gray-100', 'text-gray-900');
         }
 
-        // Apply animations
         if (!this.settings.enableAnimations) {
             document.documentElement.style.setProperty('--transition-duration', '0s');
         } else {
@@ -886,7 +832,6 @@ class App {
         input.click();
     }
 
-    // Analytics Methods
     initializeAnalyticsCharts() {
         const chartConfigs = [
             { id: 'analytics-waitingTimeChart', label: 'Average Waiting Time', color: 'rgb(34, 197, 94)' },
@@ -898,13 +843,14 @@ class App {
         chartConfigs.forEach(config => {
             const canvas = document.getElementById(config.id);
             if (canvas) {
+                // ✅ CHANGE 5: Added MLFQ to analytics chart labels and data
                 this.analyticsCharts[config.id] = new Chart(canvas, {
                     type: 'bar',
                     data: {
-                        labels: ['FCFS', 'SJF', 'SRTF', 'RR', 'Priority', 'Preemptive Priority'],
+                        labels: ['FCFS', 'SJF', 'SRTF', 'RR', 'Priority', 'Preemptive Priority', 'MLFQ'],
                         datasets: [{
                             label: config.label,
-                            data: [0, 0, 0, 0, 0, 0],
+                            data: [0, 0, 0, 0, 0, 0, 0],
                             backgroundColor: config.color,
                             borderColor: config.color,
                             borderWidth: 1
@@ -913,27 +859,17 @@ class App {
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: {
-                                display: false
-                            }
+                            legend: { display: false }
                         },
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                ticks: {
-                                    color: 'rgb(156, 163, 175)'
-                                },
-                                grid: {
-                                    color: 'rgb(75, 85, 99)'
-                                }
+                                ticks: { color: 'rgb(156, 163, 175)' },
+                                grid: { color: 'rgb(75, 85, 99)' }
                             },
                             x: {
-                                ticks: {
-                                    color: 'rgb(156, 163, 175)'
-                                },
-                                grid: {
-                                    color: 'rgb(75, 85, 99)'
-                                }
+                                ticks: { color: 'rgb(156, 163, 175)' },
+                                grid: { color: 'rgb(75, 85, 99)' }
                             }
                         }
                     }
@@ -952,7 +888,6 @@ class App {
         document.getElementById('analytics-no-data').classList.add('hidden');
         document.getElementById('analytics-content').classList.remove('hidden');
 
-        // Update performance overview
         const selectedMetrics = this.analyticsData[this.selectedAlgorithm] || Object.values(this.analyticsData)[0];
         if (selectedMetrics) {
             document.getElementById('analytics-avgWaitingTime').textContent = selectedMetrics.avgWaitingTime.toFixed(2);
@@ -964,39 +899,39 @@ class App {
             document.getElementById('analytics-contextSwitches').textContent = selectedMetrics.contextSwitches || 0;
         }
 
-        // Find and display best algorithm
         const bestAlgorithm = this.metrics.findBestAlgorithm(this.analyticsData, 'avgWaitingTime');
+
+        // ✅ CHANGE 6: Added mlfq to analytics best algorithm display names
         const algorithmNames = {
             fcfs: 'FCFS',
             sjf: 'SJF',
             srtf: 'SRTF',
             rr: 'Round Robin',
             priority: 'Priority',
-            preemptivePriority: 'Preemptive Priority'
+            preemptivePriority: 'Preemptive Priority',
+            mlfq: 'MLFQ'
         };
         document.getElementById('analytics-bestAlgorithm').textContent = algorithmNames[bestAlgorithm] || '-';
 
-        // Update charts
         this.updateAnalyticsCharts();
-
-        // Update comparison table
         this.updateAnalyticsComparisonTable();
     }
 
     updateAnalyticsCharts() {
-        const algorithms = ['fcfs', 'sjf', 'srtf', 'rr', 'priority', 'preemptivePriority'];
-        
+        // ✅ CHANGE 7: Added mlfq to analytics chart data population
+        const algorithms = ['fcfs', 'sjf', 'srtf', 'rr', 'priority', 'preemptivePriority', 'mlfq'];
+
         Object.keys(this.analyticsCharts).forEach(chartId => {
             const chart = this.analyticsCharts[chartId];
             const metricKey = chartId.includes('waiting') ? 'avgWaitingTime' :
                              chartId.includes('turnaround') ? 'avgTurnaroundTime' :
                              chartId.includes('cpu') ? 'cpuUtilization' : 'throughput';
-            
+
             const data = algorithms.map(alg => {
                 const metrics = this.analyticsData[alg];
                 return metrics ? metrics[metricKey] : 0;
             });
-            
+
             chart.data.datasets[0].data = data;
             chart.update();
         });
@@ -1004,13 +939,16 @@ class App {
 
     updateAnalyticsComparisonTable() {
         const tbody = document.getElementById('analytics-comparisonTableBody');
+
+        // ✅ Also updated here for consistency
         const algorithmNames = {
             fcfs: 'FCFS',
             sjf: 'SJF',
             srtf: 'SRTF',
             rr: 'Round Robin',
             priority: 'Priority',
-            preemptivePriority: 'Preemptive Priority'
+            preemptivePriority: 'Preemptive Priority',
+            mlfq: 'MLFQ'
         };
 
         const bestWaitingTime = this.metrics.findBestAlgorithm(this.analyticsData, 'avgWaitingTime');
@@ -1063,27 +1001,6 @@ class App {
 
             tbody.appendChild(row);
         });
-    }
-
-    // Override saveToLocalStorage to respect autoSave setting
-    saveToLocalStorage() {
-        if (this.settings.autoSave) {
-            localStorage.setItem('cpuSchedulerProcesses', JSON.stringify(this.processes));
-        }
-    }
-
-    // Override showToast to respect showToasts setting
-    showToast(message, type = 'success') {
-        if (!this.settings.showToasts) return;
-
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, 3000);
     }
 }
 
