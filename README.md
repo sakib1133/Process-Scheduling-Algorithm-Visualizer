@@ -108,4 +108,4 @@ npx http-server
 Fork → branch → PR. Include tests or representative scenarios when adding or changing schedulers.
 
 ## Author 
-- Author: sakib1133 — final-year Computer Science student
+Mohd Sakib Malik 
