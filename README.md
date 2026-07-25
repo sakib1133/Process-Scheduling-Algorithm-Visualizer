@@ -107,6 +107,5 @@ npx http-server
 ## Contributing
 Fork → branch → PR. Include tests or representative scenarios when adding or changing schedulers.
 
-## License & author
-- License: ISC  
+## Author 
 - Author: sakib1133 — final-year Computer Science student
