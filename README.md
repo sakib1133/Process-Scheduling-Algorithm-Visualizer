@@ -2,6 +2,7 @@
 
 A browser-based simulator for visualizing CPU scheduling algorithms using interactive Gantt charts and performance metrics. Built to help understand and compare scheduling techniques used in Operating Systems.
 
+
 ## Features
 
 - Add, edit, and delete processes
@@ -21,7 +22,6 @@ A browser-based simulator for visualizing CPU scheduling algorithms using intera
 - Preemptive Priority
 - MLFQ
 - Multilevel Queue
-- Lottery Scheduling
 
 ## Tech Stack
 
