@@ -9,7 +9,6 @@ A browser-based simulator for visualizing CPU scheduling algorithms using intera
 - Interactive Gantt Chart visualization
 - Compare multiple scheduling algorithms
 - Performance metrics (Waiting Time, Turnaround Time, CPU Utilization,Throughput Context Switches)
-- Round Robin with configurable time quantum
 - Process data saved using LocalStorage
 
 ## Supported Algorithms
